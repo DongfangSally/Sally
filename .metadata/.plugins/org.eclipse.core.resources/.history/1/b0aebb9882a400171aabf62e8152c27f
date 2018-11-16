@@ -1,0 +1,76 @@
+
+public class WordGram implements Comparable<WordGram>{
+	
+	private String[] myWords;
+	private int myHash;
+	
+	public WordGram(String[] words, int index, int size) {
+		// complete this constructor
+		myWords=new String[size];
+		for (int i=0;i<size;i++){
+			myWords[i]=words[i+index];
+			myHash=myHash+(int)Math.pow(17, i)*myWords[i].hashCode();
+		}	
+	}
+	
+	@Override
+	public int hashCode() {
+		return myHash;
+	}
+	
+	@Override
+	public String toString() {
+		return String.join("", this.myWords);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || ! (other instanceof WordGram)) {
+			return false;
+		}
+		WordGram wg=(WordGram) other;
+		if(!(this.length()==wg.length())){
+			return false;
+		}
+		for(int j=0;j<this.myWords.length;j++){
+			if(!(this.myWords[j].equals(wg.myWords[j]))){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public int compareTo(WordGram wg) {
+		String[] w1=this.myWords;
+		String[] w2=wg.myWords;
+		int l1=w1.length;
+		int l2=w2.length;
+		int common=Math.min(l1,l2);//Notice the syntax to find the munimum
+		for(int j=0;j<common;j++){
+			if(w1[j].compareTo(w2[j])==-1){
+				return -1;
+			}
+			if(w1[j].compareTo(w2[j])==1){
+				return 1;
+			}
+		}
+		return l1-l2;
+	}
+	
+	public int length() {
+		return this.myWords.length;
+	}
+	
+	public WordGram shiftAdd(String last) {
+		String[] shift=new String[myWords.length];
+		for(int i=0;i<myWords.length;i++){
+			if(i==myWords.length-1){
+				shift[i]=last;
+			}else{
+			shift[i]=this.myWords[i+1];
+			}
+		}
+		return new WordGram(shift,0,myWords.length);
+	}
+}
